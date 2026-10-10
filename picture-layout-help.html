@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Picture Layout Planner – Help</title>
+<style>
+  :root{
+    --bg:#f7f5f1; --panel:#ffffff; --ink:#2b2b28; --muted:#7a766d;
+    --line:#dedad2; --accent:#3d5a80; --accent-soft:#e8edf4; --warn:#b3492f;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0; background:var(--bg); color:var(--ink);
+    font:15px/1.55 "Segoe UI", system-ui, sans-serif;}
+  header{background:var(--accent); color:#fff; padding:18px 28px;}
+  header h1{margin:0; font-size:22px;}
+  header p{margin:4px 0 0; opacity:.85; font-size:13px;}
+  .wrap{display:flex; max-width:1150px; margin:0 auto; gap:24px; padding:24px 20px;}
+  nav{flex:0 0 220px; position:sticky; top:20px; align-self:flex-start;
+    background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:14px;}
+  nav h3{margin:0 0 8px; font-size:12px; text-transform:uppercase; color:var(--muted); letter-spacing:.05em;}
+  nav a{display:block; color:var(--ink); text-decoration:none; padding:4px 8px; border-radius:6px; font-size:14px;}
+  nav a:hover{background:var(--accent-soft); color:var(--accent);}
+  main{flex:1; min-width:0;}
+  section{background:var(--panel); border:1px solid var(--line); border-radius:10px;
+    padding:18px 22px; margin-bottom:18px;}
+  h2{margin:0 0 10px; font-size:18px; color:var(--accent);}
+  h4{margin:14px 0 4px; font-size:15px;}
+  ul,ol{padding-left:22px; margin:6px 0;}
+  li{margin:3px 0;}
+  table{border-collapse:collapse; width:100%; margin:8px 0; font-size:14px;}
+  th,td{border:1px solid var(--line); padding:6px 9px; text-align:left; vertical-align:top;}
+  th{background:var(--accent-soft);}
+  kbd{background:#eee; border:1px solid #ccc; border-bottom-width:2px; border-radius:4px;
+    padding:1px 6px; font:12px Consolas, monospace;}
+  code{background:#f0eee9; padding:1px 5px; border-radius:4px; font:13px Consolas, monospace;}
+  .ui{font-weight:600; background:#f0eee9; border:1px solid var(--line); border-radius:4px; padding:0 5px; white-space:nowrap;}
+  .tip{background:var(--accent-soft); border-left:4px solid var(--accent); padding:8px 12px; border-radius:6px; margin:10px 0;}
+  .warn{background:#fbefe7; border-left:4px solid var(--warn); padding:8px 12px; border-radius:6px; margin:10px 0;}
+  pre{background:#f0eee9; padding:10px 12px; border-radius:6px; overflow-x:auto; font:13px Consolas, monospace;}
+  @media (max-width:800px){ .wrap{flex-direction:column;} nav{position:static; flex:none;} }
+  @media print{ nav,header p{display:none;} .wrap{display:block;} section{break-inside:avoid;} }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Picture Layout Planner – Help</h1>
+  <p>Plan a wall of framed pictures, then get exact hanging measurements. Desktop/laptop only. Press <b>F1</b> in the app to open this page.</p>
+</header>
+
+<div class="wrap">
+<nav>
+  <h3>Contents</h3>
+  <a href="#quick">Quick start</a>
+  <a href="#space">The space (wall)</a>
+  <a href="#library">Frame library</a>
+  <a href="#placing">Placing &amp; moving frames</a>
+  <a href="#nudge">Nudge pad &amp; Turbo</a>
+  <a href="#snap">Alignment snapping</a>
+  <a href="#measure">Measurements &amp; guides</a>
+  <a href="#images">Pictures on frames</a>
+  <a href="#lock">Locking &amp; removing</a>
+  <a href="#undo">Undo / redo &amp; keys</a>
+  <a href="#saving">Saving layouts</a>
+  <a href="#export">Export (PDF &amp; CSV)</a>
+  <a href="#hanging">Using the hanging data</a>
+  <a href="#install">Files &amp; installation</a>
+  <a href="#trouble">Troubleshooting</a>
+</nav>
+
+<main>
+
+<section id="quick">
+  <h2>Quick start</h2>
+  <ol>
+    <li>On <b>Set up your space</b>, enter the wall width and height in inches and click <span class="ui">Create space</span>.</li>
+    <li>In <b>Frame Library</b> (left panel), enter a frame and click <span class="ui">Add to library</span>.</li>
+    <li>Drag a frame from <b>Your Frames</b> onto the space.</li>
+    <li>Arrange — snapping, spacing labels and the nudge pad help you fine-tune.</li>
+    <li>Optionally drop a photo onto a frame to preview the art.</li>
+    <li>Click <span class="ui">Export PDF</span> for a printed hanging sheet or <span class="ui">Export data (CSV)</span> for a spreadsheet.</li>
+  </ol>
+  <div class="tip">All dimensions are in inches. On-screen measurements round to the nearest <b>1/8"</b>; the exports give decimal inches to 0.001".</div>
+</section>
+
+<section id="space">
+  <h2>The space (wall)</h2>
+  <ul>
+    <li><b>Space size</b> – shown in the header. <span class="ui">Change size</span> lets you enter a new width and height. Frames already placed stay put, but <b>undo history is cleared</b>.</li>
+    <li><b>Canvas background</b> – color picker or hex value (e.g. <code>#E8E2D6</code>) to approximate your wall paint.</li>
+    <li><b>Centerline</b> – a gray dashed line runs top to bottom at the center of the space, handy for centering over a sofa or mantel.</li>
+    <li>The canvas scales to fit your window; measurements are always true inches.</li>
+  </ul>
+  <div class="tip">Measure the space from a fixed reference you can find again with a tape — a corner, door casing, ceiling or chair rail. All hanging numbers are measured from the <b>top-left corner of the space</b>.</div>
+</section>
+
+<section id="library">
+  <h2>Frame library</h2>
+  <p>Frames you add are saved in the browser and are there next time you open the app.</p>
+  <table>
+    <tr><th>Field</th><th>Meaning</th></tr>
+    <tr><td>Frame name</td><td>Any label, e.g. <code>8x10 black</code>. Required.</td></tr>
+    <tr><td>Overall width / height</td><td>Outside dimensions of the frame. Required.</td></tr>
+    <tr><td>Frame member width</td><td>Molding width (default 1.5"). Draws the frame border.</td></tr>
+    <tr><td>Frame color</td><td>Color picker or hex value for the molding.</td></tr>
+    <tr><td>Mat width / color</td><td>Optional. Leave width blank for no mat.</td></tr>
+  </table>
+  <p>Each entry in <b>Your Frames</b> shows a small preview, size, molding and mat. Click <b>×</b> on an entry to remove it from the library (frames already on the canvas are not affected).</p>
+  <div class="warn">To change a library frame, remove it and add it again — there's no edit. Placed copies keep the old settings.</div>
+</section>
+
+<section id="placing">
+  <h2>Placing &amp; moving frames</h2>
+  <ul>
+    <li>Drag a frame from <b>Your Frames</b> onto the space. It lands centered on the mouse. The same frame can be placed many times.</li>
+    <li>Each placed frame gets a <b>number badge</b> (top center), in the order placed. The PDF and CSV use the same numbers. Removing a frame renumbers the ones after it.</li>
+    <li><b>Click</b> a frame to select it (blue outline); <b>drag</b> to move it. Frames can't be dragged off the space.</li>
+    <li>Click an empty part of the space to deselect.</li>
+  </ul>
+</section>
+
+<section id="nudge">
+  <h2>Nudge pad &amp; Turbo</h2>
+  <p>The nudge pad appears at the lower right whenever a frame is selected.</p>
+  <ul>
+    <li>Each arrow click moves the selected frame <b>1/8"</b>.</li>
+    <li>Check <span class="ui">Turbo</span> above the pad for <b>1/2"</b> per click. The center of the pad shows the current step.</li>
+    <li>Arrows are grayed out when the selected frame is locked.</li>
+  </ul>
+</section>
+
+<section id="snap">
+  <h2>Alignment snapping</h2>
+  <p>While dragging, a frame snaps when one of its edges or its center comes close to an edge or center of <b>any other frame</b>. A purple guide line shows what it lined up with. Snapping only applies while dragging — the nudge pad moves freely.</p>
+</section>
+
+<section id="measure">
+  <h2>Measurements &amp; guides</h2>
+  <h4><span class="ui">Show spacing</span></h4>
+  <p>Orange dashed lines between neighboring frames (side by side or stacked), labeled with the gap. Use it to make spacing even.</p>
+  <h4><span class="ui">Top left corner</span></h4>
+  <p>For the selected frame, blue lines show the distance from the <b>top of the space</b> down to the frame's top edge, and from the <b>left side of the space</b> to the frame's left edge.</p>
+</section>
+
+<section id="images">
+  <h2>Pictures on frames</h2>
+  <p>Drag an image file (JPG, PNG, etc.) from File Explorer onto a placed frame. It fills the opening inside the molding and mat. Images are included in the PDF diagram and saved with the layout.</p>
+  <div class="warn">Photos straight off a phone are large. Several of them can exceed the browser's storage, and the auto-saved layout may stop updating. Resize photos to around 1000 px first, or use <span class="ui">Save layout</span> to keep a file copy.</div>
+</section>
+
+<section id="lock">
+  <h2>Locking &amp; removing</h2>
+  <ul>
+    <li><b>Lock</b> – click the padlock at the top-left of a frame. A locked frame shows a dashed gray outline and can't be dragged or nudged. Click the padlock again to unlock.</li>
+    <li><b>Remove</b> – click the <b>×</b> at the top-right of a frame, or select it and press <kbd>Delete</kbd>.</li>
+    <li><span class="ui">Clear canvas</span> removes all placed frames (asks first; can be undone).</li>
+  </ul>
+</section>
+
+<section id="undo">
+  <h2>Undo / redo &amp; keys</h2>
+  <table>
+    <tr><th>Action</th><th>Button / keys</th></tr>
+    <tr><td>Undo</td><td><span class="ui">Undo</span> or <kbd>Ctrl</kbd>+<kbd>Z</kbd></td></tr>
+    <tr><td>Redo</td><td><span class="ui">Redo</span>, <kbd>Ctrl</kbd>+<kbd>Y</kbd> or <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Z</kbd></td></tr>
+    <tr><td>Remove selected frame</td><td><kbd>Delete</kbd></td></tr>
+    <tr><td>Open help</td><td><span class="ui">? Help</span> or <kbd>F1</kbd></td></tr>
+  </table>
+  <p>The last 50 changes to placed frames (move, nudge, add, remove, lock, picture, clear) can be undone. Library edits and background color are not part of undo. Shortcuts are ignored while typing in an input box.</p>
+</section>
+
+<section id="saving">
+  <h2>Saving layouts</h2>
+  <ul>
+    <li><b>Auto-save</b> – the current layout (space, frames, background) is kept in the browser and reloads when you reopen the app.</li>
+    <li><span class="ui">Save layout</span> – downloads <code>picture-layout.json</code>. Rename it per wall (e.g. <code>hallway.json</code>) to keep several plans.</li>
+    <li><span class="ui">Load layout</span> – opens a saved <code>.json</code> and replaces the current layout.</li>
+  </ul>
+</section>
+
+<section id="export">
+  <h2>Export (PDF &amp; CSV)</h2>
+  <h4><span class="ui">Export PDF</span></h4>
+  <p>Saves <code>picture-layout-hanging-reference.pdf</code> (letter size, orientation matches the space): page 1 is the scaled layout diagram with numbered frames, page 2 is the hanging data table. Works offline using the bundled <code>libs</code> folder.</p>
+  <h4><span class="ui">Export data (CSV)</span></h4>
+  <p>Saves <code>hanging-data.csv</code> for Excel or Google Sheets. One row per picture:</p>
+  <table>
+    <tr><th>Column</th><th>Meaning</th></tr>
+    <tr><td>Space Width / Height (in)</td><td>Size of the space</td></tr>
+    <tr><td>Picture #</td><td>Number badge</td></tr>
+    <tr><td>Frame Width / Height (in)</td><td>Overall frame size</td></tr>
+    <tr><td>Top-Left X / Y (in)</td><td>Frame's top-left corner, from the top-left of the space</td></tr>
+    <tr><td>Top-Center X / Y (in)</td><td>Middle of the frame's top edge, from the top-left of the space</td></tr>
+  </table>
+</section>
+
+<section id="hanging">
+  <h2>Using the hanging data on the wall</h2>
+  <ol>
+    <li>Find the top-left corner of the space on the real wall (your reference).</li>
+    <li>For each picture, measure across <b>Top-Center X</b> and down <b>Top-Center Y</b>; make a light pencil mark. That's where the top of the frame goes.</li>
+    <li>On the back of the frame, measure from the top edge down to the hanger (wire pulled taut toward the top, sawtooth, or D-ring).</li>
+    <li>Set the nail or hook that distance <b>below</b> the pencil mark.</li>
+  </ol>
+  <div class="tip">Two D-rings: measure each ring's offset from the frame's center line and from the top, then mark both, left and right of the top-center mark. In the CSV, add a column for hanger drop and let the spreadsheet compute nail height.</div>
+</section>
+
+<section id="install">
+  <h2>Files &amp; installation</h2>
+<pre>C:\Custom_Apps\
+  picture-layout-app.html
+  picture-layout-help.html
+  libs\
+    jspdf.umd.min.js
+    jspdf.plugin.autotable.min.js</pre>
+  <ul>
+    <li>Keep <code>picture-layout-help.html</code> and the <code>libs</code> folder in the same folder as the app — both are found by relative path.</li>
+    <li>Open the app from <code>C:\Custom_Apps\</code>, not from Downloads.</li>
+    <li>GitHub Pages: commit the help file alongside the app. The URL must include the file name (e.g. <code>…/picture-layout-app.html</code>).</li>
+  </ul>
+</section>
+
+<section id="trouble">
+  <h2>Troubleshooting</h2>
+  <table>
+    <tr><th>Problem</th><th>Fix</th></tr>
+    <tr><td>"PDF library didn't load"</td><td>The <code>libs</code> folder isn't beside the app. Open the app from <code>C:\Custom_Apps\</code>.</td></tr>
+    <tr><td>Help button opens a blank / "file not found" page</td><td><code>picture-layout-help.html</code> isn't in the same folder as the app.</td></tr>
+    <tr><td>Frame won't move</td><td>It's locked (dashed outline) — click its padlock.</td></tr>
+    <tr><td>Nudge pad not showing</td><td>No frame is selected. Click a frame.</td></tr>
+    <tr><td>Frames or library missing</td><td>Different browser, different file location/URL, or browser data cleared — storage is per browser and per location. Use <span class="ui">Load layout</span> with a saved <code>.json</code>.</td></tr>
+    <tr><td>Changes not kept after reopening</td><td>Browser storage is full, usually from large photos. See <a href="#images">Pictures on frames</a>.</td></tr>
+    <tr><td>Undo button grayed out after Change size or Load layout</td><td>Normal — both reset undo history.</td></tr>
+    <tr><td>Doesn't work on phone</td><td>Designed for desktop/laptop mouse drag-and-drop.</td></tr>
+    <tr><td>Updated app looks unchanged</td><td>Close the old tab and reopen from <code>C:\Custom_Apps\</code>.</td></tr>
+  </table>
+</section>
+
+</main>
+</div>
+</body>
+</html>

@@ -456,6 +456,7 @@
   <button id="loadProjectBtn">Load layout</button>
   <input type="file" id="fileLoadInput" accept="application/json">
   <button id="clearCanvasBtn" class="danger" style="display:none;">Clear canvas</button>
+  <button id="helpBtn" title="Open help (F1)">? Help</button>
 </header>
 
 <div class="layout">
@@ -1271,7 +1272,7 @@
       return;
     }
     if(!window.jspdf || !window.jspdf.jsPDF){
-      alert("PDF library didn't load — check your internet connection and try again.");
+      alert("PDF library didn't load — make sure the libs folder is in the same folder as this file.");
       return;
     }
     generatePdf();
@@ -1381,9 +1382,18 @@
   }
 
   // ---------- Save / load project ----------
+  let storageWarned = false;
   function saveProjectState(){
     if(!space) return;
-    localStorage.setItem(LS_PROJECT, JSON.stringify({space, placed, canvasBgColor}));
+    try{
+      localStorage.setItem(LS_PROJECT, JSON.stringify({space, placed, canvasBgColor}));
+      storageWarned = false;
+    } catch(err){
+      if(!storageWarned){
+        storageWarned = true;
+        alert("Browser storage is full (usually from large photos), so the layout isn't being auto-saved.\n\nUse 'Save layout' to keep a file copy, or use smaller images. See Help (F1).");
+      }
+    }
   }
 
   el("saveProjectBtn").addEventListener("click", () => {
@@ -1414,6 +1424,16 @@
       }
     };
     reader.readAsText(file);
+  });
+
+  // ---------- Help ----------
+  const HELP_FILE = "picture-layout-help.html";
+  function openHelp(){
+    window.open(HELP_FILE, "pla_help");
+  }
+  el("helpBtn").addEventListener("click", openHelp);
+  document.addEventListener("keydown", (e) => {
+    if(e.key === "F1"){ e.preventDefault(); openHelp(); }
   });
 
   function escapeHtml(s){
