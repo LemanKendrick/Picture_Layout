@@ -351,6 +351,7 @@
   .align-guide.vert{width:0; border-left:1.5px solid var(--ref);}
   .align-guide.horiz{height:0; border-top:1.5px solid var(--ref);}
   .align-guide.horiz.mid{border-top:1.5px dashed var(--ref);}
+  .align-guide.vert.mid{border-left:1.5px dashed var(--ref);}
   .align-mid-marker{
     width:9px; height:9px;
     background:var(--ref);
@@ -1201,10 +1202,11 @@
       const ocx = (ox1 + ox2) / 2, ocy = (oy1 + oy2) / 2;
       const box = {x1: ox1, y1: oy1, x2: ox2, y2: oy2};
 
-      [[x1, ox1], [x1, ox2], [x2, ox1], [x2, ox2], [cx, ocx]].forEach(([mv, rv]) => {
+      // third value true = moving frame's left/right edge to the other frame's center line
+      [[x1, ox1], [x1, ox2], [x2, ox1], [x2, ox2], [cx, ocx], [x1, ocx, true], [x2, ocx, true]].forEach(([mv, rv, mid]) => {
         const diff = mv - rv;
         if(Math.abs(diff) <= ALIGN_SNAP_PX && (!bestX || Math.abs(diff) < Math.abs(bestX.diff))){
-          bestX = {diff, rv, box};
+          bestX = {diff, rv, box, mid: !!mid};
         }
       });
 
@@ -1217,11 +1219,11 @@
       });
     });
 
-    let snappedX = x, snappedY = y, vGuideX = null, hGuideY = null, vBox = null, hBox = null, hMid = false;
-    if(bestX){ snappedX = x - bestX.diff; vGuideX = bestX.rv; vBox = bestX.box; }
+    let snappedX = x, snappedY = y, vGuideX = null, hGuideY = null, vBox = null, hBox = null, hMid = false, vMid = false;
+    if(bestX){ snappedX = x - bestX.diff; vGuideX = bestX.rv; vBox = bestX.box; vMid = bestX.mid; }
     if(bestY){ snappedY = y - bestY.diff; hGuideY = bestY.rv; hBox = bestY.box; hMid = bestY.mid; }
 
-    return {x: snappedX, y: snappedY, vGuideX, hGuideY, vBox, hBox, hMid};
+    return {x: snappedX, y: snappedY, vGuideX, hGuideY, vBox, hBox, hMid, vMid};
   }
 
   function drawAlignGuides(item, wpx, hpx, snap){
@@ -1230,11 +1232,21 @@
       const yTop = Math.min(item.y, snap.vBox.y1);
       const yBot = Math.max(item.y + hpx, snap.vBox.y2);
       const line = document.createElement("div");
-      line.className = "align-guide vert";
+      line.className = "align-guide vert" + (snap.vMid ? " mid" : "");
       line.style.left = snap.vGuideX + "px";
       line.style.top = yTop + "px";
       line.style.height = (yBot - yTop) + "px";
       spaceEl.appendChild(line);
+      if(snap.vMid){
+        // markers on top and bottom edges of the reference frame, at its center line
+        [snap.vBox.y1, snap.vBox.y2].forEach(my => {
+          const m = document.createElement("div");
+          m.className = "align-guide align-mid-marker";
+          m.style.left = snap.vGuideX + "px";
+          m.style.top = my + "px";
+          spaceEl.appendChild(m);
+        });
+      }
     }
     if(snap.hGuideY !== null && snap.hBox){
       const xLeft = Math.min(item.x, snap.hBox.x1);
