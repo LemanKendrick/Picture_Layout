@@ -210,6 +210,10 @@
   }
   #space.dragover{outline:3px dashed var(--accent); outline-offset:2px;}
 
+  /* Frame, mat, wall and swatch colors are the user's data, not decoration.
+     Keep them when Windows high-contrast (Contrast themes) forces page colors. */
+  #space, #space *, .lib-swatch{forced-color-adjust:none;}
+
   .placed{
     position:absolute;
     border:6px solid #8a7a63;
