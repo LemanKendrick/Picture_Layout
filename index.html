@@ -174,6 +174,19 @@
     padding:2px 4px;
   }
   .lib-del:hover{color:var(--danger);}
+  .lib-edit{
+    border:none;
+    background:none;
+    color:var(--muted);
+    cursor:pointer;
+    font-size:14px;
+    padding:2px 4px;
+  }
+  .lib-edit:hover{color:var(--accent);}
+  .lib-item.editing{border-color:var(--accent); background:#e8edf4;}
+  .add-frame-form.editing{border-color:var(--accent);}
+  .edit-banner{display:none; font-size:12px; font-weight:600; color:var(--accent);}
+  .add-frame-form.editing .edit-banner{display:block;}
 
   .canvas-wrap{
     flex:1;
@@ -462,7 +475,8 @@
 <div class="layout">
   <aside>
     <h2>Frame Library</h2>
-    <div class="add-frame-form">
+    <div class="add-frame-form" id="frameForm">
+      <div class="edit-banner" id="editBanner">Editing frame</div>
       <input type="text" id="newFrameName" placeholder="Frame name (e.g. 8x10)">
       <label class="hint" style="margin:2px 0 0;">Overall outer dimensions</label>
       <div class="row2">
@@ -483,6 +497,7 @@
         <input type="text" id="newFrameMatColorHex" value="#ffffff" maxlength="7" placeholder="#RRGGBB">
       </div>
       <button class="primary" id="addFrameBtn" style="margin-top:10px;">Add to library</button>
+      <button id="cancelEditBtn" style="display:none;">Cancel edit</button>
     </div>
     <h2>Your Frames</h2>
     <div id="libraryList"></div>
@@ -537,6 +552,7 @@
   let canvasBgColor = "#ffffff";
   let undoStack = [];
   let redoStack = [];
+  let editingId = null;      // library frame currently loaded in the form
   const ALIGN_SNAP_PX = 6;
   const NUDGE_INCHES = 0.125; // 1/8"
 
@@ -600,7 +616,7 @@
     }
     library.forEach(f => {
       const item = document.createElement("div");
-      item.className = "lib-item";
+      item.className = "lib-item" + (f.id === editingId ? " editing" : "");
       item.draggable = true;
       item.dataset.id = f.id;
 
@@ -625,8 +641,13 @@
           <div class="name">${escapeHtml(f.name)}</div>
           <div class="dims">${f.w}" x ${f.h}" &middot; ${memberWidth}" molding &middot; ${matLine}</div>
         </div>
+        <button class="lib-edit" title="Edit frame (updates placed copies)">&#9998;</button>
         <button class="lib-del" title="Remove from library">&times;</button>
       `;
+      item.querySelector(".lib-edit").addEventListener("click", (e) => {
+        e.stopPropagation();
+        startEditFrame(f);
+      });
       item.addEventListener("dragstart", (e) => {
         e.dataTransfer.setData("text/plain", "lib:" + f.id);
         e.dataTransfer.effectAllowed = "copy";
@@ -635,7 +656,8 @@
         e.stopPropagation();
         library = library.filter(x => x.id !== f.id);
         saveLibrary();
-        renderLibrary();
+        if(editingId === f.id) resetFrameForm();
+        else renderLibrary();
       });
       list.appendChild(item);
     });
@@ -696,19 +718,83 @@
       alert("Enter a name, width, and height for the frame.");
       return;
     }
-    library.push({id: "f" + Date.now(), name, w, h, memberWidth, color, matWidth, matColor});
-    saveLibrary();
-    renderLibrary();
+    const data = {name, w, h, memberWidth, color, matWidth, matColor};
+    if(editingId){
+      const f = library.find(x => x.id === editingId);
+      if(f) applyLibraryEdit(f, data);
+    } else {
+      library.push({id: "f" + Date.now(), ...data});
+      saveLibrary();
+    }
+    resetFrameForm();
+  });
+
+  el("cancelEditBtn").addEventListener("click", resetFrameForm);
+
+  function setFormColor(colorId, hexId, value){
+    el(colorId).value = value;
+    el(hexId).value = value;
+  }
+
+  function resetFrameForm(){
+    editingId = null;
     el("newFrameName").value = "";
     el("newFrameW").value = "";
     el("newFrameH").value = "";
     el("newFrameMemberW").value = "1.5";
     el("newFrameMatW").value = "";
-    el("newFrameColor").value = "#8a7a63";
-    el("newFrameColorHex").value = "#8a7a63";
-    el("newFrameMatColor").value = "#ffffff";
-    el("newFrameMatColorHex").value = "#ffffff";
-  });
+    setFormColor("newFrameColor", "newFrameColorHex", "#8a7a63");
+    setFormColor("newFrameMatColor", "newFrameMatColorHex", "#ffffff");
+    el("addFrameBtn").textContent = "Add to library";
+    el("cancelEditBtn").style.display = "none";
+    el("frameForm").classList.remove("editing");
+    renderLibrary();
+  }
+
+  function startEditFrame(f){
+    editingId = f.id;
+    el("newFrameName").value = f.name;
+    el("newFrameW").value = f.w;
+    el("newFrameH").value = f.h;
+    el("newFrameMemberW").value = f.memberWidth || 1.5;
+    el("newFrameMatW").value = f.matWidth || "";
+    setFormColor("newFrameColor", "newFrameColorHex", f.color || "#8a7a63");
+    setFormColor("newFrameMatColor", "newFrameMatColorHex", f.matColor || "#ffffff");
+    const n = instancesOf(f).length;
+    el("editBanner").textContent = n
+      ? `Editing frame — updates ${n} placed cop${n === 1 ? "y" : "ies"}`
+      : "Editing frame";
+    el("addFrameBtn").textContent = "Save changes";
+    el("cancelEditBtn").style.display = "block";
+    el("frameForm").classList.add("editing");
+    renderLibrary();
+    el("newFrameName").focus();
+  }
+
+  // Placed copies are linked by libId. Frames placed before libId existed
+  // are matched by name + size the first time their library entry is edited.
+  function instancesOf(f){
+    return placed.filter(p => p.libId === f.id ||
+      (!p.libId && p.name === f.name && p.w === f.w && p.h === f.h));
+  }
+
+  function applyLibraryEdit(f, data){
+    const matches = instancesOf(f);
+    if(matches.length && space) pushUndo();
+    Object.assign(f, data);
+    saveLibrary();
+    if(!matches.length || !space) return;
+    const maxX = space.w * pxPerInch, maxY = space.h * pxPerInch;
+    matches.forEach(p => {
+      Object.assign(p, data);
+      p.libId = f.id;
+      // keep top-left; pull back inside the space if the frame grew past an edge
+      p.x = Math.max(0, Math.min(p.x, maxX - p.w * pxPerInch));
+      p.y = Math.max(0, Math.min(p.y, maxY - p.h * pxPerInch));
+    });
+    renderPlaced();
+    saveProjectState();
+  }
 
   // ---------- Space setup ----------
   el("createSpaceBtn").addEventListener("click", () => {
@@ -1202,7 +1288,7 @@
     x = Math.max(0, Math.min(x, rect.width - wpx));
     y = Math.max(0, Math.min(y, rect.height - hpx));
     pushUndo();
-    placed.push({id: "p"+Date.now(), name: f.name, w: f.w, h: f.h, memberWidth: f.memberWidth || 1.5, color: f.color, matWidth: f.matWidth || 0, matColor: f.matColor || "#ffffff", x, y, img: null, locked: false});
+    placed.push({id: "p"+Date.now(), libId: f.id, name: f.name, w: f.w, h: f.h, memberWidth: f.memberWidth || 1.5, color: f.color, matWidth: f.matWidth || 0, matColor: f.matColor || "#ffffff", x, y, img: null, locked: false});
     renderPlaced();
     saveProjectState();
   });

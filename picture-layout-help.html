@@ -107,7 +107,13 @@
     <tr><td>Mat width / color</td><td>Optional. Leave width blank for no mat.</td></tr>
   </table>
   <p>Each entry in <b>Your Frames</b> shows a small preview, size, molding and mat. Click <b>×</b> on an entry to remove it from the library (frames already on the canvas are not affected).</p>
-  <div class="warn">To change a library frame, remove it and add it again — there's no edit. Placed copies keep the old settings.</div>
+  <h4>Editing a frame</h4>
+  <ol>
+    <li>Click the pencil <b>✎</b> on a library entry. Its settings load into the form, which is outlined in blue and shows how many placed copies will change.</li>
+    <li>Change any field and click <span class="ui">Save changes</span>, or <span class="ui">Cancel edit</span> to back out.</li>
+  </ol>
+  <p>Every copy of that frame on the canvas updates: name, size, molding, colors and mat. Each copy keeps its <b>top-left corner</b>, picture and lock. If a larger size would push a frame past the edge of the space, it slides back inside.</p>
+  <div class="tip"><span class="ui">Undo</span> reverts the placed copies, but the library entry keeps the new settings. Edit it again to change it back.</div>
 </section>
 
 <section id="placing">
@@ -167,7 +173,7 @@
     <tr><td>Remove selected frame</td><td><kbd>Delete</kbd></td></tr>
     <tr><td>Open help</td><td><span class="ui">? Help</span> or <kbd>F1</kbd></td></tr>
   </table>
-  <p>The last 50 changes to placed frames (move, nudge, add, remove, lock, picture, clear) can be undone. Library edits and background color are not part of undo. Shortcuts are ignored while typing in an input box.</p>
+  <p>The last 50 changes to placed frames (move, nudge, add, remove, lock, picture, clear, library edit) can be undone. Changes to the library itself and background color are not part of undo. Shortcuts are ignored while typing in an input box.</p>
 </section>
 
 <section id="saving">
@@ -209,7 +215,7 @@
 <section id="install">
   <h2>Files &amp; installation</h2>
 <pre>C:\Custom_Apps\
-  picture-layout-app.html
+  index.html
   picture-layout-help.html
   libs\
     jspdf.umd.min.js
@@ -217,7 +223,7 @@
   <ul>
     <li>Keep <code>picture-layout-help.html</code> and the <code>libs</code> folder in the same folder as the app — both are found by relative path.</li>
     <li>Open the app from <code>C:\Custom_Apps\</code>, not from Downloads.</li>
-    <li>GitHub Pages: commit the help file alongside the app. The URL must include the file name (e.g. <code>…/picture-layout-app.html</code>).</li>
+    <li>GitHub Pages: commit the help file alongside the app. Because the app is named <code>index.html</code>, the bare folder URL (e.g. <code>https://&lt;user&gt;.github.io/&lt;repo&gt;/</code>) opens it.</li>
   </ul>
 </section>
 
