@@ -291,6 +291,23 @@
     z-index:3;
     pointer-events:none;
   }
+  .placed .img-del-btn{
+    position:absolute;
+    bottom:2px; right:2px;
+    height:18px;
+    line-height:18px;
+    padding:0 6px;
+    background:rgba(0,0,0,0.6);
+    color:#fff;
+    border-radius:9px;
+    font-size:10px;
+    cursor:pointer;
+    z-index:2;
+    display:none;
+    white-space:nowrap;
+  }
+  .placed:hover .img-del-btn, .placed.selected .img-del-btn{display:block;}
+  .placed .img-del-btn:hover{background:var(--danger);}
   .placed.dragover-img{outline:2px dashed var(--accent-2);}
 
   .gap-line{
@@ -898,9 +915,13 @@
       d.innerHTML += '<div class="close-btn">&times;</div>';
       d.innerHTML += `<div class="lock-btn" title="${p.locked ? 'Unlock position' : 'Lock position'}">${p.locked ? '&#128274;' : '&#128275;'}</div>`;
       d.innerHTML += `<div class="num-badge">${pictureNumber}</div>`;
+      if(p.img){
+        d.innerHTML += '<div class="img-del-btn" title="Remove picture from frame">&times; picture</div>';
+      }
 
       d.addEventListener("mousedown", (e) => {
-        if(e.target.classList.contains("close-btn") || e.target.classList.contains("lock-btn")) return;
+        if(e.target.classList.contains("close-btn") || e.target.classList.contains("lock-btn")
+           || e.target.classList.contains("img-del-btn")) return;
         selectedId = p.id;
         renderPlaced();
         if(p.locked) return;
@@ -921,6 +942,16 @@
         renderPlaced();
         saveProjectState();
       });
+      const imgDel = d.querySelector(".img-del-btn");
+      if(imgDel){
+        imgDel.addEventListener("click", (e) => {
+          e.stopPropagation();
+          pushUndo();
+          p.img = null;
+          renderPlaced();
+          saveProjectState();
+        });
+      }
       d.querySelector(".close-btn").addEventListener("click", (e) => {
         e.stopPropagation();
         pushUndo();
